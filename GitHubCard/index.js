@@ -1,17 +1,28 @@
+// creating card function component
+
+
 /* Step 1: using axios, send a GET request to the following URL 
-           (replacing the palceholder with your Github name):
-           https://api.github.com/users/<your name>
+          (replacing the palceholder with your Github name):
+          https://api.github.com/users/<your name>
 */
-
+axios.get('https://api.github.com/users/Yaretas')
+.then(data => {
+  console.log('response.data', data);
+  const cardsContainer = document.querySelector('.cards');
+  cardsContainer.appendChild(gitCard(data.data));
+})
+.catch( err => {
+  console.log('error', err);
+})
 /* Step 2: Inspect and study the data coming back, this is YOUR 
-   github info! You will need to understand the structure of this 
-   data in order to use it to build your component function 
+    github info! You will need to understand the structure of this 
+    data in order to use it to build your component function 
 
-   Skip to Step 3.
+    Skip to Step 3.
 */
 
 /* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
+            create a new component and add it to the DOM as a child of .cards
 */
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
@@ -24,8 +35,73 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [ 'ELehotzky', 'meholt', 'lourod1987', 'Heather-Ridgill', 'MicahJank' ];
 
+followersArray.forEach((friends) => {
+axios.get(`https://api.github.com/users/${friends}`)
+  .then(data => {
+  console.log('response.data', data);
+  const cardsContainer = document.querySelector('.cards');
+  cardsContainer.appendChild(gitCard(data.data));
+})
+.catch( err => {
+  console.log('error', err);
+})
+})
+
+// creating gitInfo Card..
+const gitCard = (gitObj) =>{
+  // creating card elements..
+  const cardDiv = document.createElement('div');
+  cardDiv.classList.add('card');
+  // cardsContainer.appendChild(cardDiv);
+
+  const img = document.createElement('img');
+  img.src = gitObj.avatar_url;
+  // img.classList.add('card img');
+  cardDiv.appendChild(img);
+
+  const cardInfo = document.createElement('div');
+  cardInfo.classList.add('card-info');
+  cardDiv.appendChild(cardInfo);
+
+  const infoH3 = document.createElement('h3');
+  infoH3.classList.add('name');
+  infoH3.textContent = gitObj.name;
+  cardInfo.appendChild(infoH3);
+
+  const username = document.createElement('p');
+  username.classList.add('username');
+  username.textContent = gitObj['login'];
+  cardInfo.appendChild(username);
+
+  const gitLocation = document.createElement('p');
+  gitLocation.textContent = `Location ${gitObj.location}`;
+  cardInfo.appendChild(gitLocation);
+
+  const profileContainer = document.createElement('p');
+  profileContainer.textContent = `Profile:`;
+  cardInfo.appendChild(profileContainer);
+
+  const profile = document.createElement('a');
+  profile.textContent = gitObj.html_url;
+  profile.href = gitObj.html_url;
+  profileContainer.appendChild(profile);
+
+  const followers = document.createElement('p');
+  followers.textContent = `Followers: ${gitObj.followers}`;
+  cardInfo.appendChild(followers);
+
+  const following = document.createElement('p');
+  following.textContent = `Following: ${gitObj.following}`;
+  cardInfo.appendChild(following);
+
+  const bio = document.createElement('p');
+  bio.textContent = `Bio: ${gitObj.bio}`;
+  cardInfo.appendChild(bio);
+
+  return cardDiv;
+} 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
 
@@ -45,7 +121,6 @@ const followersArray = [];
 </div>
 
 */
-
 /* List of LS Instructors Github username's: 
   tetondan
   dustinmyers
